@@ -17,3 +17,7 @@ To have the "builddeploy" task work is a bit more involved:
 - Then set up `settings.json` to contain the correct information (it appears after building the project once)
 
 Now running the Task should automatically set up the plugin after building.
+
+# Installation
+
+Either pick the prebuilt zip in [releases](https://github.com/Managor/Decky-Clipper/releases) or use the one you built yourself. Enable Developer mode in decky settings so that you get access to the Instal Plugin from ZIP File setting.
