@@ -3,6 +3,7 @@ import {
   PanelSection,
   PanelSectionRow,
   staticClasses,
+  Navigation,
 } from "@decky/ui";
 import {
   callable,
@@ -23,6 +24,7 @@ function Content() {
   const onClick = async () => {
     if (!isRecording) {
       await startRecord();
+      Navigation.CloseSideMenus();
     } else {
       await stopRecord();
     }
