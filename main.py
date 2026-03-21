@@ -19,7 +19,7 @@ class Plugin:
       audiosource = audiosource + "pipewiresrc do-timestamp=true client-name=Microphone-capture ! audio/x-raw,channels=2 ! mixer. "
     audioencode = "audiomixer name=mixer ! opusenc ! mux. "
     filename = f"{datetime.now().strftime('%Y-%m-%d_%H:%M:%S')}-{app_name}.mkv"
-    filecreation = f"matroskamux name=mux ! filesink location={decky.HOME}/Videos/{filename}"
+    filecreation = f"matroskamux name=mux ! filesink 'location={decky.HOME}/Videos/{filename}'"
 
     pipeline = f"{gstreamer}{videopipeline}{audiosource}{audioencode}{filecreation}"
 
