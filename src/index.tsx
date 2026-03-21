@@ -4,6 +4,7 @@ import {
   PanelSectionRow,
   staticClasses,
   Navigation,
+  Router,
 } from "@decky/ui";
 import {
   callable,
@@ -12,7 +13,7 @@ import {
 import { useEffect, useState } from "react";
 import { FaCameraRetro } from "react-icons/fa";
 
-const startRecord = callable("start_record");
+const startRecord = callable<[string], void>("start_record");
 const stopRecord = callable("stop_record");
 const checkRecordingState = callable<[], boolean>("is_recording")
 
@@ -23,7 +24,7 @@ function Content() {
 
   const onClick = async () => {
     if (!isRecording) {
-      await startRecord();
+      await startRecord(Router.MainRunningApp?.display_name ?? "Steam");
       Navigation.CloseSideMenus();
     } else {
       await stopRecord();
