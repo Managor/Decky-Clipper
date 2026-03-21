@@ -13,7 +13,7 @@ class Plugin:
   async def start_record(self, app_name: str, microphone: bool):
     # Generate a gstreamer pipeline
     gstreamer = f"GST_PLUGIN_PATH={decky.DECKY_PLUGIN_DIR}/bin/gstreamer-1.0 gst-launch-1.0 "
-    videopipeline = "pipewiresrc do-timestamp=true target-object=gamescope client-name=Video-capture ! videoconvert ! vah264enc ! h264parse ! mux. "
+    videopipeline = "pipewiresrc do-timestamp=true target-object=gamescope client-name=Video-capture ! videoconvert ! vulkanh264enc ! h264parse ! mux. "
     audiosource = "pipewiresrc do-timestamp=true stream-properties=props,stream.capture.sink=true client-name=Speaker-capture ! audio/x-raw,channels=2 ! mixer. "
     if microphone:
       audiosource = audiosource + "pipewiresrc do-timestamp=true client-name=Microphone-capture ! audio/x-raw,channels=2 ! mixer. "
