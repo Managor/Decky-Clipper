@@ -25,8 +25,8 @@ function Content() {
 
   const onClick = async () => {
     if (!isRecording) {
-      await startRecord(Router.MainRunningApp?.display_name ?? "Steam", useMicrophone);
       Navigation.CloseSideMenus();
+      await startRecord(Router.MainRunningApp?.display_name ?? "Steam", useMicrophone);
     } else {
       await stopRecord();
     }
