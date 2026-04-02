@@ -6,6 +6,8 @@ import {
   staticClasses,
   Navigation,
   Router,
+  showModal,
+  ModalRoot,
 } from "@decky/ui";
 import {
   callable,
@@ -17,13 +19,15 @@ import { FaCameraRetro } from "react-icons/fa";
 const startRecord = callable<[string, boolean], void>("start_record");
 const stopRecord = callable("stop_record");
 const checkRecordingState = callable<[], boolean>("is_recording")
+const listFiles = callable<[], string[]>("list_files")
 
 
 function Content() {
   const [isRecording, setIsRecording] = useState(false);
   const [useMicrophone, setUseMicrophone] = useState(false);
+  const [files, setFiles] = useState<string[]>([]);
 
-  const onClick = async () => {
+  const initiateRecording = async () => {
     if (!isRecording) {
       await startRecord(Router.MainRunningApp?.display_name ?? "Steam", useMicrophone);
       Navigation.CloseSideMenus();
@@ -36,17 +40,44 @@ function Content() {
   useEffect(() => {
     (async () => {
       setIsRecording(await checkRecordingState())
+      setFiles(await listFiles())
     })();
   }, []);
+
+  const playVideo = async (file: string) => {
+    showModal(
+      <ModalRoot>
+        <div>
+          {`http://localhost:8000/${file}`}
+        </div>
+        <video
+          src={`http://localhost:8000/${file}`}
+          controls
+          autoPlay
+          style={{
+            width: "100%",
+            borderRadius: "6px",
+            background: "#000",
+            maxHeight: "60vh",
+          }}
+        />
+      </ModalRoot>
+    );
+  };
 
   return (
     <PanelSection>
       <PanelSectionRow>
-        <ButtonItem label="The recording will be saved in ~/Videos/ with the current timestamp" layout="below" onClick={onClick} >
+        <ButtonItem label="The recording will be saved in ~/Videos/ with the current timestamp" layout="below" onClick={initiateRecording} >
           {isRecording ? "Stop recording" : "Start recording"}
         </ButtonItem>
         <ToggleField  label="Record microphone" checked={useMicrophone} onChange={(e) => setUseMicrophone(e)}></ToggleField>
       </PanelSectionRow>
+      {files.map((file) => (
+        <ButtonItem key={file} onClick={() => playVideo(file)}>
+          {file}
+        </ButtonItem>
+      ))}
     </PanelSection>
   );
 };
@@ -57,7 +88,6 @@ export default definePlugin(() => {
     titleView: <div className={staticClasses.Title}>Decky Clipper</div>,
     content: <Content />,
     icon: <FaCameraRetro />,
-    onDismount() {
-    },
+    onDismount() {},
   };
 });
