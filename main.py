@@ -15,7 +15,7 @@ class Plugin:
   # Record the gamescope pipewire node
   async def start_record(self, app_name: str, microphone: bool):
     # Generate a gstreamer pipeline
-    gstreamer = f"GST_PLUGIN_PATH={decky.DECKY_PLUGIN_DIR}/bin/gstreamer-1.0 gst-launch-1.0 -v "
+    gstreamer = f"GST_PLUGIN_PATH={decky.DECKY_PLUGIN_DIR}/bin/gstreamer-1.0 gst-launch-1.0 -ve "
     videopipeline = "pipewiresrc do-timestamp=true target-object=gamescope client-name=Video-capture keepalive-time=100 ! queue ! video/x-raw,format=NV12 ! vah264enc ! h264parse ! mux. "
     audiosource = "pipewiresrc do-timestamp=true stream-properties=props,stream.capture.sink=true client-name=Speaker-capture ! queue ! audio/x-raw,channels=2 ! mixer. "
     if microphone:
@@ -40,7 +40,7 @@ class Plugin:
     decky.logger.info("Sending signal to terminate.")
     decommission.send_signal(signal.SIGINT)
     try:
-      decommission.wait(timeout=2)
+      decommission.wait(timeout=4)
     except Exception:
       decky.logger.info("Couldn't terminate. Killing.")
       decommission.kill()

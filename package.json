@@ -1,6 +1,6 @@
 {
   "name": "decky-clipper",
-  "version": "0.9.10",
+  "version": "0.9.12",
   "description": "Record your screen.",
   "type": "module",
   "scripts": {
