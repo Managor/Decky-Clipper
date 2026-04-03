@@ -1,7 +1,6 @@
 import {
   ButtonItem,
   PanelSection,
-  PanelSectionRow,
   ToggleField,
   staticClasses,
   Navigation,
