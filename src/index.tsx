@@ -7,6 +7,9 @@ import {
   Router,
   showModal,
   ModalRoot,
+  Focusable,
+  DialogButtonPrimary,
+  DialogButtonSecondary,
 } from "@decky/ui";
 import {
   callable,
@@ -71,17 +74,11 @@ function Content() {
           }}
         />
         <PanelSection>
-          <div style={{ display: "flex", gap: 20, width: "100%", transform: "translateY(-15px)", position: "absolute", height: 0}}>
-            <div style={{ height: 0, padding: 0 }}>
-              <ButtonItem layout="inline" onClick={togglePlayback}>{playing ? "Pause" : "Play"}</ButtonItem>
-            </div>
-            <div style={{ height: 0 }}>
-              <ButtonItem layout="inline" onClick={() => seek(-10)}>Rewind 10s</ButtonItem>
-            </div>
-            <div style={{ height: 0 }}>
-              <ButtonItem layout="inline" onClick={() => seek(10)}>Forward 10s</ButtonItem>
-            </div>
-          </div>
+          <Focusable style={{ display: "flex", justifyContent: "flex-end", gap: "1em" }}>
+            <DialogButtonPrimary onClick={togglePlayback}>{playing ? "Pause" : "Play"}</DialogButtonPrimary>
+            <DialogButtonSecondary onClick={() => seek(-10)}>Rewind 10s</DialogButtonSecondary>
+            <DialogButtonSecondary onClick={() => seek(10)}>Forward 10s</DialogButtonSecondary>
+          </Focusable>
         </PanelSection>
       </ModalRoot>
     );
