@@ -60,7 +60,7 @@ function Content() {
     showModal(
       <ModalRoot>
         <div>
-          {`http://localhost:8000/${file}`}
+          {file}
         </div>
         <video
           src={`http://localhost:8000/${file}`}
