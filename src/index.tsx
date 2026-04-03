@@ -24,7 +24,17 @@ const listFiles = callable<[], string[]>("list_files")
 function Content() {
   const [isRecording, setIsRecording] = useState(false);
   const [useMicrophone, setUseMicrophone] = useState(false);
-  const [files, setFiles] = useState<string[]>([]);
+  // const [files, setFiles] = useState<string[]>([]);
+  const files = [ "testfile.mkv" ]
+  const playing = true
+
+  const togglePlayback = async () => {
+
+  }
+
+  const seek = async (seconds: number) => {
+
+  }
 
   const initiateRecording = async () => {
     if (!isRecording) {
@@ -39,7 +49,7 @@ function Content() {
   useEffect(() => {
     (async () => {
       setIsRecording(await checkRecordingState())
-      setFiles(await listFiles())
+      // setFiles(await listFiles())
     })();
   }, []);
 
@@ -51,7 +61,7 @@ function Content() {
         </div>
         <video
           src={`http://localhost:8000/${file}`}
-          controls
+          // controls
           autoPlay
           style={{
             width: "100%",
@@ -60,6 +70,19 @@ function Content() {
             maxHeight: "60vh",
           }}
         />
+        <PanelSection>
+          <div style={{ display: "flex", gap: 20, width: "100%", transform: "translateY(-15px)", position: "absolute", height: 0}}>
+            <div style={{ height: 0, padding: 0 }}>
+              <ButtonItem layout="inline" onClick={togglePlayback}>{playing ? "Pause" : "Play"}</ButtonItem>
+            </div>
+            <div style={{ height: 0 }}>
+              <ButtonItem layout="inline" onClick={() => seek(-10)}>Rewind 10s</ButtonItem>
+            </div>
+            <div style={{ height: 0 }}>
+              <ButtonItem layout="inline" onClick={() => seek(10)}>Forward 10s</ButtonItem>
+            </div>
+          </div>
+        </PanelSection>
       </ModalRoot>
     );
   };
