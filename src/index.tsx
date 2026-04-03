@@ -67,14 +67,12 @@ function Content() {
 
   return (
     <PanelSection>
-      <PanelSectionRow>
-        <ButtonItem label="The recording will be saved in ~/Videos/ with the current timestamp" layout="below" onClick={initiateRecording} >
-          {isRecording ? "Stop recording" : "Start recording"}
-        </ButtonItem>
-        <ToggleField  label="Record microphone" checked={useMicrophone} onChange={(e) => setUseMicrophone(e)}></ToggleField>
-      </PanelSectionRow>
+      <ButtonItem label="The recording will be saved in ~/Videos/ with the current timestamp" layout="below" onClick={initiateRecording} >
+        {isRecording ? "Stop recording" : "Start recording"}
+      </ButtonItem>
+      <ToggleField  label="Record microphone" checked={useMicrophone} onChange={(e) => setUseMicrophone(e)}></ToggleField>
       {files.map((file) => (
-        <ButtonItem key={file} onClick={() => playVideo(file)}>
+        <ButtonItem onClick={() => playVideo(file)} bottomSeparator="none" layout="below">
           {file}
         </ButtonItem>
       ))}

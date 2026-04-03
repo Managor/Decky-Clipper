@@ -72,7 +72,7 @@ class Plugin:
   def log_stdout(self):
     decky.logger.info("Logging stdout")
     for line in Plugin._process.stdout:
-      decky.logger.info("STDOUT: " + line.rstrip())
+      decky.logger.info(f"STDOUT: {line.rstrip()}")
     decky.logger.info("End of stdout")
     return
 
