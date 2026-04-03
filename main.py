@@ -17,13 +17,15 @@ class Plugin:
   _http_thread = None
 
 
-  def start_file_server(self):
+  async def start_file_server(self):
     if Plugin._httpd:
       return
-
-    handler = partial(SimpleHTTPRequestHandler, directory="/home/deck/Videos")
-    Plugin._httpd = ThreadingHTTPServer(("0.0.0.0", 8000), handler)
-
+    try:
+      handler = partial(SimpleHTTPRequestHandler, directory="/home/deck/Videos")
+      Plugin._httpd = ThreadingHTTPServer(("0.0.0.0", 8000), handler)
+    except OSError as e:
+      decky.logger.error(f"HTTP server failed: {e}")
+      return
     Plugin._http_thread = threading.Thread(
       target=Plugin._httpd.serve_forever,
       daemon=True,
@@ -31,6 +33,7 @@ class Plugin:
     Plugin._http_thread.start()
 
     decky.logger.info(f"Serving videos at http://localhost:8000/")
+
 
   # Record the gamescope pipewire node
   async def start_record(self, app_name: str, microphone: bool):
@@ -81,11 +84,11 @@ class Plugin:
 
 
   async def list_files(self) -> list[str]:
+    if not Plugin._httpd:
+      decky.logger.info("Starting file server")
+      await self.start_file_server()
     decky.logger.info("Listing files in ~/Videos")
-    files = sorted(os.listdir(f"{decky.HOME}/Videos"), reverse=True)
-    decky.logger.info("Printing files")
-    decky.logger.info(files)
-    return files
+    return sorted(os.listdir(f"{decky.HOME}/Videos"), reverse=True)
 
 
 
@@ -96,7 +99,6 @@ class Plugin:
 
   # Asyncio-compatible long-running code, executed in a task when the plugin is loaded
   async def _main(self):
-    self.start_file_server()
     decky.logger.info("Plugin loaded!")
     decky.logger.info("Device variant: " + subprocess.check_output(["atomupd-manager", "tracked-variant"], text=True).rstrip())
     decky.logger.info("Release branch: " + subprocess.check_output(["atomupd-manager", "tracked-branch"], text=True).rstrip())
