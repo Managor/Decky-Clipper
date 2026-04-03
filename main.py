@@ -5,7 +5,6 @@ import subprocess
 import asyncio
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 from functools import partial
-import threading
 
 import decky
 
@@ -14,7 +13,6 @@ class Plugin:
   _process = None
   _env = {**os.environ, "LD_LIBRARY_PATH":"", "XDG_RUNTIME_DIR":"/run/user/1000"}
   _httpd = None
-  _http_thread = None
 
 
   async def start_file_server(self):
@@ -26,11 +24,7 @@ class Plugin:
     except OSError as e:
       decky.logger.error(f"HTTP server failed: {e}")
       return
-    Plugin._http_thread = threading.Thread(
-      target=Plugin._httpd.serve_forever,
-      daemon=True,
-    )
-    Plugin._http_thread.start()
+    asyncio.create_task(asyncio.to_thread(Plugin._httpd.serve_forever))
 
     decky.logger.info(f"Serving videos at http://localhost:8000/")
 
