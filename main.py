@@ -39,12 +39,13 @@ class Plugin:
       audiosource = audiosource + "pipewiresrc do-timestamp=true client-name=Microphone-capture ! queue ! audio/x-raw,channels=2 ! mixer. "
     audioencode = "audiomixer name=mixer ! opusenc ! mux. "
     filename = f"{datetime.now().strftime('%Y-%m-%d_%H:%M:%S')}-{app_name}.mkv"
-    filecreation = f"matroskamux name=mux ! filesink 'location={decky.HOME}/Videos/{filename}'"
+    filepath = f"{decky.HOME}/Videos/{filename}"
+    filecreation = f"matroskamux name=mux ! filesink 'location={filepath}'"
 
     pipeline = f"{gstreamer}{videopipeline}{audiosource}{audioencode}{filecreation}"
 
     decky.logger.info("Running pipeline: " + pipeline)
-    Plugin._process = subprocess.Popen(pipeline, shell=True, env=self._env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+    Plugin._process = (subprocess.Popen(pipeline, shell=True, env=self._env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True), filepath)
 
     asyncio.create_task(asyncio.to_thread(self.log_stdout))
     return
@@ -52,7 +53,7 @@ class Plugin:
 
   async def stop_record(self):
     decky.logger.info("Stopping recording.")
-    decommission = Plugin._process
+    decommission, filepath = Plugin._process
     Plugin._process = None
     decky.logger.info("Sending signal to terminate.")
     decommission.send_signal(signal.SIGINT)
@@ -62,6 +63,9 @@ class Plugin:
       decky.logger.info("Couldn't terminate. Killing.")
       decommission.kill()
     decky.logger.info("Recording stopped.")
+    if os.path.getsize(filepath) == 0:
+      decky.logger.info("Created file is 0 bytes. Deleting.")
+      os.remove(filepath)
     return
 
 
@@ -70,8 +74,9 @@ class Plugin:
 
 
   def log_stdout(self):
+    process, filepath = Plugin._process
     decky.logger.info("Logging stdout")
-    for line in Plugin._process.stdout:
+    for line in process.stdout:
       decky.logger.info(f"STDOUT: {line.rstrip()}")
     decky.logger.info("End of stdout")
     return
