@@ -73,13 +73,11 @@ function Content() {
             maxHeight: "60vh",
           }}
         />
-        <PanelSection>
-          <Focusable style={{ display: "flex", justifyContent: "flex-end", gap: "1em" }}>
-            <DialogButtonPrimary onClick={togglePlayback}>{playing ? "Pause" : "Play"}</DialogButtonPrimary>
-            <DialogButtonSecondary onClick={() => seek(-10)}>Rewind 10s</DialogButtonSecondary>
-            <DialogButtonSecondary onClick={() => seek(10)}>Forward 10s</DialogButtonSecondary>
-          </Focusable>
-        </PanelSection>
+        <Focusable style={{ display: "flex", justifyContent: "flex-end", gap: "1em" }}>
+          <DialogButtonPrimary onClick={togglePlayback}>{playing ? "Pause" : "Play"}</DialogButtonPrimary>
+          <DialogButtonSecondary onClick={() => seek(-10)}>Rewind 10s</DialogButtonSecondary>
+          <DialogButtonSecondary onClick={() => seek(10)}>Forward 10s</DialogButtonSecondary>
+        </Focusable>
       </ModalRoot>
     );
   };
