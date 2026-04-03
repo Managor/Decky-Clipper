@@ -3,6 +3,8 @@ import signal
 from datetime import datetime
 import subprocess
 import asyncio
+from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
+from functools import partial
 
 import decky
 
@@ -10,6 +12,21 @@ import decky
 class Plugin:
   _process = None
   _env = {**os.environ, "LD_LIBRARY_PATH":"", "XDG_RUNTIME_DIR":"/run/user/1000"}
+  _httpd = None
+
+
+  async def start_file_server(self):
+    if Plugin._httpd:
+      return
+    try:
+      handler = partial(SimpleHTTPRequestHandler, directory="/home/deck/Videos")
+      Plugin._httpd = ThreadingHTTPServer(("0.0.0.0", 8000), handler)
+    except OSError as e:
+      decky.logger.error(f"HTTP server failed: {e}")
+      return
+    asyncio.create_task(asyncio.to_thread(Plugin._httpd.serve_forever))
+
+    decky.logger.info(f"Serving videos at http://localhost:8000/")
 
 
   # Record the gamescope pipewire node
@@ -55,9 +72,17 @@ class Plugin:
   def log_stdout(self):
     decky.logger.info("Logging stdout")
     for line in Plugin._process.stdout:
-      decky.logger.info("STDOUT: " + line.rstrip())
+      decky.logger.info(f"STDOUT: {line.rstrip()}")
     decky.logger.info("End of stdout")
     return
+
+
+  async def list_files(self) -> list[str]:
+    if not Plugin._httpd:
+      decky.logger.info("Starting file server")
+      await self.start_file_server()
+    decky.logger.info("Listing files in ~/Videos")
+    return sorted(os.listdir(f"{decky.HOME}/Videos"), reverse=True)
 
 
 
