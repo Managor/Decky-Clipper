@@ -1,6 +1,9 @@
+![Banner](https://github.com/Managor/Decky-Clipper/blob/main/assets/screenshot.jpg?raw=true)
 # Decky Clipper
 
 A sequel to the beloved [Decky Recorder](https://github.com/SDH-Stewardship/decky-recorder-fork/tree/main). Built from the ground-up with much of the code cherrypicked from the previous projects.
+
+Decky Clipper uses the PipeWire node provided by Gamescope for recording. This will allow you to record the Steam UI whenever a game is NOT running. Unfortunately this is a limitation of set by Gamescope. Game recording otherwise works exactly like Steam native game recording.
 
 Currently only supports direct screencapture with only one file format, but the plan is to expand the functionality in the future.
 
