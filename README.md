@@ -5,6 +5,8 @@ A sequel to the beloved [Decky Recorder](https://github.com/SDH-Stewardship/deck
 
 Decky Clipper uses the PipeWire node provided by Gamescope for recording. This will allow you to record the Steam UI whenever a game is NOT running. Unfortunately this is a limitation of set by Gamescope. Game recording otherwise works exactly like Steam native game recording.
 
+After a clip has been created, it can then be viewed in gamemode from the Decky Clipper side menu. Currently gamescope has a limitation that if the underlying application doesn't send any frames, gamescope will do the same. This leads to a 0-byte file that will get automatically deleted.
+
 Currently only supports direct screencapture with only one file format, but the plan is to expand the functionality in the future.
 
 # Building
