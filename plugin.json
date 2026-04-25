@@ -5,7 +5,7 @@
   "api_version": 1,
   "publish": {
     "tags": [],
-    "description": "Record your screen.",
+    "description": "Record your screen even when a game is not running.",
     "image": "https://raw.githubusercontent.com/Managor/Decky-Clipper/refs/heads/main/assets/screenshot.jpg"
   }
 }
