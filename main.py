@@ -38,7 +38,7 @@ class Plugin:
     if microphone:
       audiosource = audiosource + "pipewiresrc do-timestamp=true client-name=Microphone-capture ! queue ! audio/x-raw,channels=2 ! mixer. "
     audioencode = "audiomixer name=mixer ! opusenc ! mux. "
-    filename = f"{datetime.now().strftime('%Y-%m-%d_%H:%M:%S')}-{app_name}.mkv"
+    filename = f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}-{app_name}.mkv"
     filepath = f"{decky.HOME}/Videos/{filename}"
     filecreation = f"matroskamux name=mux ! filesink 'location={filepath}'"
 
