@@ -33,7 +33,7 @@ class Plugin:
   async def start_record(self, app_name: str, microphone: bool):
     # Generate a gstreamer pipeline
     gstreamer = f"gst-launch-1.0 -ve "
-    videopipeline = "pipewiresrc do-timestamp=true target-object=gamescope client-name=Video-capture ! queue ! videorate ! video/x-raw,format=NV12 ! videoconvert ! vulkanupload ! vulkanh264enc ! h264parse ! mux. "
+    videopipeline = "pipewiresrc do-timestamp=true target-object=gamescope client-name=Video-capture keepalive-time=50 ! queue ! video/x-raw,format=NV12 ! videoconvert ! vulkanupload ! vulkanh264enc ! h264parse ! mux. "
     audiosource = "pipewiresrc do-timestamp=true stream-properties=props,stream.capture.sink=true client-name=Speaker-capture ! queue ! audio/x-raw,channels=2 ! mixer. "
     if microphone:
       audiosource = audiosource + "pipewiresrc do-timestamp=true client-name=Microphone-capture ! queue ! audio/x-raw,channels=2 ! mixer. "
