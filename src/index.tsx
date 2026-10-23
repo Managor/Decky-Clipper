@@ -7,12 +7,13 @@ import {
   Router,
   showModal,
   ModalRoot,
+  DropdownItem,
 } from "@decky/ui";
 import {
   callable,
   definePlugin,
 } from "@decky/api"
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaCameraRetro } from "react-icons/fa";
 
 const startRecord = callable<[string, boolean], void>("start_record");
@@ -25,6 +26,7 @@ function Content() {
   const [useMicrophone, setUseMicrophone] = useState(false);
   const [files, setFiles] = useState<string[]>([]);
   // const files = ["testfile.mkv"];
+  const focusRef = useRef<HTMLDivElement>(null);
 
   const initiateRecording = async () => {
     if (!isRecording) {
@@ -45,6 +47,7 @@ function Content() {
       setIsRecording(await checkRecordingState());
       setFiles(await listFiles());
     })();
+    focusRef.current?.querySelector<HTMLElement>('button, [role="button"], [tabindex="0"]')?.focus();
   }, []);
 
   const playVideo = async (file: string) => {
@@ -70,18 +73,20 @@ function Content() {
 
   return (
     <PanelSection>
-      <ButtonItem
-        label="The recording will be saved in ~/Videos/ with the current timestamp"
-        layout="below"
-        onClick={initiateRecording}
-      >
-        {isRecording ? "Stop recording" : "Start recording"}
-      </ButtonItem>
+      <div ref={focusRef}>
+        <ButtonItem
+          label="The recording will be saved in ~/Videos/ with the current timestamp"
+          layout="below"
+          onClick={initiateRecording}
+          >
+          {isRecording ? "Stop recording" : "Start recording"}
+        </ButtonItem>
+      </div>
 
       <ToggleField
         label="Record microphone"
         checked={useMicrophone}
-        onChange={(e) => setUseMicrophone(e)}
+        onChange={setUseMicrophone}
       />
 
       {files.map((file) => (
