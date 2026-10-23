@@ -17,30 +17,33 @@ import { FaCameraRetro } from "react-icons/fa";
 
 const startRecord = callable<[string, boolean], void>("start_record");
 const stopRecord = callable("stop_record");
-const checkRecordingState = callable<[], boolean>("is_recording")
-const listFiles = callable<[], string[]>("list_files")
-
+const checkRecordingState = callable<[], boolean>("is_recording");
+const listFiles = callable<[], string[]>("list_files");
 
 function Content() {
   const [isRecording, setIsRecording] = useState(false);
   const [useMicrophone, setUseMicrophone] = useState(false);
   const [files, setFiles] = useState<string[]>([]);
-  // const files = [ "testfile.mkv" ]
+  // const files = ["testfile.mkv"];
 
   const initiateRecording = async () => {
     if (!isRecording) {
-      await startRecord(Router.MainRunningApp?.display_name ?? "Steam", useMicrophone);
+      await startRecord(
+        Router.MainRunningApp?.display_name ?? "Steam",
+        useMicrophone
+      );
       Navigation.CloseSideMenus();
     } else {
       await stopRecord();
     }
+
     setIsRecording(await checkRecordingState());
   };
 
   useEffect(() => {
     (async () => {
-      setIsRecording(await checkRecordingState())
-      setFiles(await listFiles())
+      setIsRecording(await checkRecordingState());
+      setFiles(await listFiles());
     })();
   }, []);
 
@@ -67,25 +70,38 @@ function Content() {
 
   return (
     <PanelSection>
-      <ButtonItem label="The recording will be saved in ~/Videos/ with the current timestamp" layout="below" onClick={initiateRecording} >
+      <ButtonItem
+        label="The recording will be saved in ~/Videos/ with the current timestamp"
+        layout="below"
+        onClick={initiateRecording}
+      >
         {isRecording ? "Stop recording" : "Start recording"}
       </ButtonItem>
-      <ToggleField  label="Record microphone" checked={useMicrophone} onChange={(e) => setUseMicrophone(e)}></ToggleField>
+
+      <ToggleField
+        label="Record microphone"
+        checked={useMicrophone}
+        onChange={(e) => setUseMicrophone(e)}
+      />
+
       {files.map((file) => (
-        <ButtonItem onClick={() => playVideo(file)} bottomSeparator="none" layout="below">
+        <ButtonItem
+          key={file}
+          onClick={() => playVideo(file)}
+          bottomSeparator="none"
+          layout="below"
+        >
           {file}
         </ButtonItem>
       ))}
     </PanelSection>
   );
-};
+}
 
-export default definePlugin(() => {
-  return {
-    name: "Decky Clipper",
-    titleView: <div className={staticClasses.Title}>Decky Clipper</div>,
-    content: <Content />,
-    icon: <FaCameraRetro />,
-    onDismount() {},
-  };
-});
+export default definePlugin(() => ({
+  name: "Decky Clipper",
+  titleView: <div className={staticClasses.Title}>Decky Clipper</div>,
+  content: <Content />,
+  icon: <FaCameraRetro />,
+  onDismount() {},
+}));

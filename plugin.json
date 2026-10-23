@@ -1,11 +1,11 @@
 {
   "name": "Decky-Clipper",
   "author": "Managor",
-  "flags": ["debug", "_root"],
+  "flags": [],
   "api_version": 1,
   "publish": {
-    "tags": ["template", "root"],
-    "description": "Record your screen.",
+    "tags": [],
+    "description": "Record your screen even when a game is not running.",
     "image": "https://raw.githubusercontent.com/Managor/Decky-Clipper/refs/heads/main/assets/screenshot.jpg"
   }
 }
