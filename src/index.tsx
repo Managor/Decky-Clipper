@@ -7,8 +7,6 @@ import {
   Router,
   showModal,
   ModalRoot,
-  DropdownItem,
-  PanelSectionRow,
 } from "@decky/ui";
 import {
   callable,
@@ -26,7 +24,6 @@ function Content() {
   const [isRecording, setIsRecording] = useState(false);
   const [useMicrophone, setUseMicrophone] = useState(false);
   const [files, setFiles] = useState<string[]>([]);
-  const [encoder, setEncoder] = useState<string>("vaapi");
   // const files = ["testfile.mkv"];
   const focusRef = useRef<HTMLDivElement>(null);
 
@@ -36,7 +33,7 @@ function Content() {
         Router.MainRunningApp?.display_name ?? "Steam",
         useMicrophone
       );
-      // Navigation.CloseSideMenus();
+      Navigation.CloseSideMenus();
     } else {
       await stopRecord();
     }
@@ -90,19 +87,6 @@ function Content() {
         checked={useMicrophone}
         onChange={setUseMicrophone}
       />
-      <div>encoder: {encoder}</div>
-      <PanelSectionRow>
-      <DropdownItem
-        label="Hardware encodng"
-        rgOptions={[
-          { data: "vaapi", label: "VAAPI" },
-          { data: "vulkan", label: "Vulkan" },
-        ]}
-        selectedOption={encoder}
-        onChange={(option) => setEncoder("vulkan")}
-        />
-      </PanelSectionRow>
-
 
       {files.map((file) => (
         <ButtonItem
