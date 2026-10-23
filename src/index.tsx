@@ -7,6 +7,9 @@ import {
   Router,
   showModal,
   ModalRoot,
+  Focusable,
+  DialogButtonPrimary,
+  DialogButtonSecondary,
 } from "@decky/ui";
 import {
   callable,
@@ -23,9 +26,19 @@ const listFiles = callable<[], string[]>("list_files");
 function Content() {
   const [isRecording, setIsRecording] = useState(false);
   const [useMicrophone, setUseMicrophone] = useState(false);
-  const [files, setFiles] = useState<string[]>([]);
-  // const files = ["testfile.mkv"];
+  // const [files, setFiles] = useState<string[]>([]);
+  const files = ["testfile.mkv"];
+  const playing = true;
+  const togglePlayback = async () => {
+
+  }
+
+  const seek = async (seconds: number) => {
+
+  }
+
   const focusRef = useRef<HTMLDivElement>(null);
+  const playRef = useRef<HTMLDivElement>(null);
 
   const initiateRecording = async () => {
     if (!isRecording) {
@@ -44,9 +57,10 @@ function Content() {
   useEffect(() => {
     (async () => {
       setIsRecording(await checkRecordingState());
-      setFiles(await listFiles());
+      // setFiles(await listFiles());
     })();
     focusRef.current?.querySelector<HTMLElement>('button, [role="button"], [tabindex="0"]')?.focus();
+    playRef.current?.querySelector<HTMLElement>('button, [role="button"], [tabindex="0"]')?.focus();
   }, []);
 
   const playVideo = async (file: string) => {
@@ -57,7 +71,7 @@ function Content() {
         </div>
         <video
           src={`http://localhost:8000/${file}`}
-          controls
+          // controls
           autoPlay
           style={{
             width: "100%",
@@ -66,6 +80,23 @@ function Content() {
             maxHeight: "60vh",
           }}
         />
+        <Focusable style={{ display: "flex", justifyContent: "flex-end", gap: "1em" }}>
+
+          <DialogButtonSecondary onClick={() => seek(-10)}>
+            Rewind 10s
+          </DialogButtonSecondary>
+
+          <div ref={playRef}>
+            <DialogButtonPrimary onClick={togglePlayback}>
+              {playing ? "Pause" : "Play"}
+            </DialogButtonPrimary>
+          </div>
+
+          <DialogButtonSecondary onClick={() => seek(10)}>
+            Forward 10s
+          </DialogButtonSecondary>
+
+        </Focusable>
       </ModalRoot>
     );
   };
