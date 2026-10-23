@@ -32,7 +32,7 @@ function Content() {
         Router.MainRunningApp?.display_name ?? "Steam",
         useMicrophone
       );
-      Navigation.CloseSideMenus();
+      // Navigation.CloseSideMenus();
     } else {
       await stopRecord();
     }
