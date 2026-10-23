@@ -87,7 +87,7 @@ class Plugin:
       decky.logger.info("Starting file server")
       await self.start_file_server()
     decky.logger.info("Listing files in ~/Videos")
-    return sorted(os.listdir(f"{decky.HOME}/Videos"), reverse=True)
+    return sorted(([f.name for f in os.scandir(f"{decky.HOME}/Videos") if f.is_file()]), reverse=True)
 
 
 
